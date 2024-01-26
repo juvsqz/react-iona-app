@@ -1,8 +1,8 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { AppContextProvider } from './contexts/AppContext'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import routes from './routes';
+import './index.scss'
 
 
 const router = createBrowserRouter(
@@ -16,9 +16,7 @@ const router = createBrowserRouter(
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
     <AppContextProvider>
       <RouterProvider router={router} />
     </AppContextProvider>
-  </React.StrictMode>,
 )

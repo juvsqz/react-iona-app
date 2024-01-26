@@ -2,7 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAppContext, Dispatcher } from '../contexts/AppContext'
 import { getBreeds, imageSearchByBreedId, getBreedImageById } from '../services/BreedService'
 import { useEffect } from 'react'
-import { get } from 'lodash'
+import { differenceWith, get } from 'lodash'
+import { DEFAULT_ERROR } from '../config'
 
 type KnownUrlParams = { breed_id: string; image_id: string }
 
@@ -11,36 +12,66 @@ function useBreed() {
   const { state, dispatch } = useAppContext()
   const navigate = useNavigate()
 
-  const { setLoading, setBreedOptions, setActiveBreedImages, setSelectedBreedImage } = Dispatcher(dispatch)
+  const { setLoading, setBreedOptions, setActiveBreedImages, setSelectedBreedImage, setErrorMessage } =
+    Dispatcher(dispatch)
 
   const loadBreedOptions = async () => {
+    let errMsg = ''
     try {
       setLoading(true)
       const breeds = await getBreeds()
-      setBreedOptions(breeds.data)
+      if (Array.isArray(get(breeds, 'data', null))) {
+        setBreedOptions(breeds.data)
+      } else {
+        throw new Error('This is invalid data')
+      }
     } catch (error) {
+      errMsg = DEFAULT_ERROR
       return null
     } finally {
       setLoading(false)
+      if (errMsg.length > 0) {
+        setErrorMessage(errMsg)
+      }
     }
   }
 
-  const loadBreedImages = async (breedId: string | null) => {
+  const loadBreedImages = async (breedId: string | null, page = 1) => {
+    let errMsg = ''
     if (breedId === null) return
     try {
       setLoading(true)
-      setActiveBreedImages(breedId, [])
-      const images = await imageSearchByBreedId(breedId)
-      setActiveBreedImages(breedId, images.data)
+
+      if (page === 1) {
+        setActiveBreedImages(breedId, [])
+      }
+      const images = await imageSearchByBreedId(breedId, page)
+
+      let newData = []
+      if (page > 1) {
+        // Check if there are new items to be added
+        const newItems = differenceWith(images.data, state.activeBreed.images, (currentItems: any, newItems: any) => {
+          return currentItems.id === newItems.id
+        })
+        newData = [...state.activeBreed.images, ...newItems]
+      } else {
+        newData = images.data
+      }
+      setActiveBreedImages(breedId, newData, page)
     } catch (error) {
       setActiveBreedImages(breedId, [])
+      errMsg = DEFAULT_ERROR
       return null
     } finally {
       setLoading(false)
+      if (errMsg.length > 0) {
+        setErrorMessage(errMsg)
+      }
     }
   }
 
   const loadBreedImage = async (breedId: string | null, imageId: string) => {
+    let errMsg = ''
     if (breedId === null) return
     try {
       setLoading(true)
@@ -48,15 +79,23 @@ function useBreed() {
       setSelectedBreedImage(breedId, image.data)
     } catch (error) {
       setSelectedBreedImage(breedId, {})
+      errMsg = DEFAULT_ERROR
       return null
     } finally {
       setLoading(false)
+      if (errMsg.length > 0) {
+        setErrorMessage(errMsg)
+      }
     }
   }
 
-  const navigateToBreed = async (breedId: string = state.activeBreed?.id || '') => {
+  const navigateToBreed = async (breedId: string = state.activeBreed.id, imageId: string | null = null) => {
     if (breedId.length > 0) {
-      navigate(`/breeds/${breedId}`)
+      if (imageId === null) {
+        navigate(`/breeds/${breedId}`)
+      } else {
+        navigate(`/breeds/${breedId}/${imageId}`)
+      }
     }
   }
 
@@ -68,7 +107,7 @@ function useBreed() {
       // Request new image if the params is different from the previously selected
       // Will be false only if the route was triggered from the home page
       const selectedImageId = get(state, 'activeBreed.selectedImage.id', null)
-      const isNewImageSelected = selectedImageId != null && selectedImageId !== requestedImageId
+      const isNewImageSelected = selectedImageId !== requestedImageId
       if (isNewImageSelected) {
         loadBreedImage(requestedBreedId, requestedImageId)
       }
@@ -91,7 +130,7 @@ function useBreed() {
     const requestedImageId = get(params, 'image_id', null)
     const actualBreedId = get(state, 'activeBreed.selectedImage.breeds[0].id', null)
     if (!!actualBreedId && actualBreedId !== requestedBreedId && !!requestedImageId) {
-      navigate(`/breeds/${actualBreedId}/${requestedImageId}`)
+      navigateToBreed(actualBreedId, requestedImageId)
     }
   }, [state.activeBreed.selectedImage])
 
@@ -100,7 +139,7 @@ function useBreed() {
     if (state.breedOptions.length < 1) loadBreedOptions()
   }, [])
 
-  return { loadBreedOptions, navigateToBreed, params }
+  return { loadBreedOptions, loadBreedImages, navigateToBreed, params }
 }
 
 export default useBreed

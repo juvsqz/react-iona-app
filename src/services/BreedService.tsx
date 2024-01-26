@@ -1,12 +1,13 @@
 import apiService from './apiService'
+import { PAGE_LIMIT } from '../config'
 
 export async function getBreeds() {
   return apiService.get('/breeds')
 }
 
-export async function imageSearchByBreedId(breedId: string, page: number = 1, limit: number = 10) {
+export async function imageSearchByBreedId(breedId: string, page: number = 1) {
   return apiService.get('/images/search', {
-    params: { breed_id: breedId, page, limit },
+    params: { breed_id: breedId, page, limit: PAGE_LIMIT },
   })
 }
 
