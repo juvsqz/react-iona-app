@@ -1,5 +1,5 @@
 # Cat as a Service Demo using Vite
-This is a demo app project to integrate the [Cat as as Service](https://thecatapi.com/) API using Vite Framework
+This is a demo app project to integrate the [Cat as as Service](https://thecatapi.com/) API using Vite Framework. 
 
 
 ## Prerequisites
@@ -15,6 +15,14 @@ These are the core technologies & libraries used in the project.
 - SASS - For styling
 - Typescript - Static typing 
 - React Router - for SPA routing capability
+
+## Key Features
+- Single page application that supports browser routing and bookmarking. Currently, there are 3 urls exposed
+  - ``/`` - index file
+  - ``/breeds/:breed_id`` - Listing of breed images
+  - ``/breeds/:breed_id/:image_id`` - Breed image and profile
+- Responsive and optimize for mobile view
+- Powered by React
 
 ## Installation
 
