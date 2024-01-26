@@ -1,30 +1,55 @@
-# React + TypeScript + Vite
+# Cat as a Service Demo using Vite
+This is a demo app project to integrate the [Cat as as Service](https://thecatapi.com/) API using Vite Framework
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Prerequisites
+- NodeJS - >=18
+- API key from https://thecatapi.com/signup 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies
 
-## Expanding the ESLint configuration
+These are the core technologies & libraries used in the project.
+- Vite & React - Javascript library to handle the reactivity of the data
+- React Context - Used as a state management
+- Github Pages - To host the client app
+- SASS - For styling
+- Typescript - Static typing 
+- React Router - for SPA routing capability
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+```bash
+# Clone this repository
+$ git clone https://github.com/juvsqz/vite-cat-service-app-demo
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+# Go into the project folder
+$ cd vite-cat-service-app-demo
+
+# Install dependencies
+$ npm install
+
+# Setup local environment
+$ cp env.example env.local # Place the api key to the variable
+
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+### To access online
+Simply visit the <https://juvsqz.github.io/vite-cat-service-app-demo/> 
+
+## Development
+
+### Available Scripts
+
+| Command        | Description                                                                                                                                                                                                                                                       |
+| :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm install` | Install project dependencies                                                                                                                                                                                                                 |
+| `npm run dev`   | Runs the project in development mode (HMR is enabled)                                                                                           |
+| `npm run build`   | Builds the app for production to the `dist` folder.<br /> It correctly bundles React in production mode and optimizes the build for the best performance.<br/>The build is handled by the Vite Frameorm |
+| `npm run deploy`   | Deploy the app in github page|
+
+                                                                    
+## Contact
+If you want to contact me you can reach me at juvsqz@gmail.com
+
+
