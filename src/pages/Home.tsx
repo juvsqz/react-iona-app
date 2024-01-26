@@ -38,19 +38,21 @@ function Home() {
               })}
             </div>
 
-            <div className="text-center">
-              {state.pagination.hasNext || state.isLoading ? (
-                <button
-                  disabled={state.isLoading}
-                  className="load-more-button"
-                  onClick={() => loadBreedImages(state?.activeBreed?.id, state.pagination.currentPage + 1)}
-                >
-                  {state.isLoading ? 'Loading...' : 'Load More'}
-                </button>
-              ) : (
-                <div className="end-of-results">- End of Results -</div>
-              )}
-            </div>
+            {state.activeBreed.id && (
+              <div className="text-center">
+                {state.pagination.hasNext || state.isLoading ? (
+                  <button
+                    disabled={state.isLoading}
+                    className="load-more-button"
+                    onClick={() => loadBreedImages(state?.activeBreed?.id, state.pagination.currentPage + 1)}
+                  >
+                    {state.isLoading ? 'Loading...' : 'Load More'}
+                  </button>
+                ) : (
+                  <div className="end-of-results">- End of Results -</div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>

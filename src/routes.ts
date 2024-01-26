@@ -4,6 +4,7 @@ import BreedDescription from './pages/BreedDescription'
 export default [
   // First will always be the index
   {
+    path: '/',
     element: Home,
   },
   {
